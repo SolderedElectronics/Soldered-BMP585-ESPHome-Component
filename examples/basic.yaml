@@ -1,5 +1,8 @@
+# Reads pressure and temperature from the Soldered BMP585 breakout board
+# once per update_interval.
+
 esphome:
-  name: soldered-esphome-component-template-test
+  name: bmp585-basic
 
 esp32:
   board: esp32-s3-devkitc-1
@@ -8,11 +11,27 @@ esp32:
 
 logger:
   level: DEBUG
+  hardware_uart: UART0
 
 external_components:
   - source:
       type: local
       path: ../components
-    components: [soldered_esphome_component_template]
+    components: [bmp585]
 
-soldered_esphome_component_template:
+i2c:
+  sda: GPIO8
+  scl: GPIO9
+  scan: true
+
+sensor:
+  - platform: bmp585
+    address: 0x47
+    update_interval: 1s
+    temperature_oversampling: 1X
+    pressure_oversampling: 1X
+    odr: 50HZ
+    pressure:
+      name: "BMP585 Pressure"
+    temperature:
+      name: "BMP585 Temperature"

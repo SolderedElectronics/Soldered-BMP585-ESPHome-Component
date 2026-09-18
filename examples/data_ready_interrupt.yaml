@@ -1,0 +1,35 @@
+# Uses the BMP585's physical interrupt pin to know when a new reading is
+# ready, instead of unconditionally polling over I2C every update_interval.
+
+esphome:
+  name: bmp585-drdy-int
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: esp-idf
+
+logger:
+  level: DEBUG
+  hardware_uart: UART0
+
+external_components:
+  - source:
+      type: local
+      path: ../components
+    components: [bmp585]
+
+i2c:
+  sda: GPIO8
+  scl: GPIO9
+  scan: true
+
+sensor:
+  - platform: bmp585
+    address: 0x47
+    update_interval: 1s
+    interrupt_pin: GPIO4
+    pressure:
+      name: "BMP585 Pressure"
+    temperature:
+      name: "BMP585 Temperature"
